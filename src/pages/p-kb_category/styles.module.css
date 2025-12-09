@@ -1,0 +1,53 @@
+
+
+.pageWrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.modalBackdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.tagItem {
+  transition: all 0.2s ease-in-out;
+}
+
+.tagItem:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tagSelected {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.tagAvailable {
+  background-color: #f8fafc;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.tagAvailable:hover {
+  background-color: #e2e8f0;
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.categoryItem {
+  transition: all 0.2s ease-in-out;
+}
+
+.categoryItem:hover {
+  background-color: #f1f5f9;
+}
+
+.categorySelected {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border-left: 3px solid #2563eb;
+}
+

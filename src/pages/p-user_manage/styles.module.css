@@ -1,0 +1,56 @@
+
+
+.pageWrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.sidebarTransition {
+  transition: width 0.3s ease-in-out;
+}
+
+.navItemActive {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border-right: 3px solid #2563eb;
+}
+
+.navItem:hover {
+  background-color: #f1f5f9;
+  color: #2563eb;
+}
+
+.tableRow:hover {
+  background-color: #f8fafc;
+}
+
+.statusBadgeActive {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.statusBadgeInactive {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.roleBadgeAdmin {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.roleBadgeLawyer {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.roleBadgeUser {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.roleBadgeReadonly {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+

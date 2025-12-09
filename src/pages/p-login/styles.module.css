@@ -1,0 +1,55 @@
+
+
+.pageWrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.formInputFocus:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btnPrimaryHover:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btnPrimaryActive:active {
+  transform: translateY(0);
+}
+
+.linkHover:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.fadeIn {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bgGradientPrimary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bgGradientSecondary {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+

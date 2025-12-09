@@ -1,0 +1,61 @@
+
+
+.pageWrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.sidebarTransition {
+  transition: width 0.3s ease-in-out;
+}
+
+.navItemActive {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border-right: 3px solid #2563eb;
+}
+
+.navItem:hover {
+  background-color: #f1f5f9;
+  color: #2563eb;
+}
+
+.configSection {
+  transition: all 0.3s ease-in-out;
+}
+
+.configSection.collapsed {
+  max-height: 60px;
+  overflow: hidden;
+}
+
+.configSection.expanded {
+  max-height: 1000px;
+}
+
+.configContent {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.configSection.collapsed .configContent {
+  opacity: 0;
+}
+
+.configSection.expanded .configContent {
+  opacity: 1;
+}
+
+.tabActive {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tabInactive {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.tabInactive:hover {
+  background-color: #e2e8f0;
+}
+
