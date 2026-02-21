@@ -1,7 +1,8 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuthStore } from '../../lib/auth';
 import styles from './styles.module.css';
 
 interface Document {
@@ -13,6 +14,24 @@ interface Document {
   fileType: string;
 }
 
+interface DocumentResponse {
+  id: string;
+  title: string;
+  createdAt?: string;
+  fileName?: string;
+  mimeType?: string;
+  createdBy?: {
+    fullName?: string;
+    username?: string;
+  };
+  tags?: Array<{ name: string }>;
+}
+
+interface KnowledgeBaseResponse {
+  id: string;
+  name: string;
+}
+
 interface FilterState {
   searchTerm: string;
   tagFilter: string;
@@ -20,82 +39,60 @@ interface FilterState {
   typeFilter: string;
 }
 
-const KnowledgeBaseDetailPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  
-  // 模拟文档数据
-  const mockDocuments: Document[] = [
-    {
-      id: 'doc1',
-      title: '开源许可证指南v2.0',
-      tags: ['许可证', '合规'],
-      uploader: '张律师',
-      uploadTime: '2024-01-15 14:30',
-      fileType: 'PDF'
-    },
-    {
-      id: 'doc2',
-      title: '专利法实施细则解读',
-      tags: ['专利', '法律'],
-      uploader: '李律师',
-      uploadTime: '2024-01-14 09:15',
-      fileType: 'Word'
-    },
-    {
-      id: 'doc3',
-      title: '软件版权保护案例分析',
-      tags: ['版权', '案例'],
-      uploader: '王律师',
-      uploadTime: '2024-01-13 16:45',
-      fileType: 'PDF'
-    },
-    {
-      id: 'doc4',
-      title: '企业合规管理最佳实践',
-      tags: ['合规', '管理'],
-      uploader: '赵律师',
-      uploadTime: '2024-01-12 11:20',
-      fileType: 'Markdown'
-    },
-    {
-      id: 'doc5',
-      title: 'GPL许可证详解',
-      tags: ['许可证', 'GPL'],
-      uploader: '张律师',
-      uploadTime: '2024-01-11 13:50',
-      fileType: 'PDF'
-    },
-    {
-      id: 'doc6',
-      title: 'Apache许可证条款分析',
-      tags: ['许可证', 'Apache'],
-      uploader: '李律师',
-      uploadTime: '2024-01-10 10:15',
-      fileType: 'Word'
-    },
-    {
-      id: 'doc7',
-      title: 'MIT许可证使用说明',
-      tags: ['许可证', 'MIT'],
-      uploader: '王律师',
-      uploadTime: '2024-01-09 15:30',
-      fileType: '文本'
-    },
-    {
-      id: 'doc8',
-      title: '知识产权保护策略',
-      tags: ['专利', '版权', '策略'],
-      uploader: '赵律师',
-      uploadTime: '2024-01-08 12:45',
-      fileType: 'PDF'
-    }
-  ];
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-  // 状态管理
+const buildAuthHeaders = (token: string | null) => ({
+  'Content-Type': 'application/json',
+  ...(token ? { Authorization: `Bearer ${token}` } : {}),
+});
+
+const formatDate = (value?: string) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+const resolveFileType = (fileName?: string, mimeType?: string) => {
+  if (fileName && fileName.includes('.')) {
+    const ext = fileName.split('.').pop() || '';
+    return ext.toUpperCase();
+  }
+  if (mimeType) {
+    return mimeType.split('/').pop() || mimeType;
+  }
+  return '未知';
+};
+
+const mapDocument = (doc: DocumentResponse): Document => ({
+  id: doc.id,
+  title: doc.title,
+  tags: doc.tags?.map(tag => tag.name) || [],
+  uploader: doc.createdBy?.fullName || doc.createdBy?.username || '系统',
+  uploadTime: formatDate(doc.createdAt),
+  fileType: resolveFileType(doc.fileName, doc.mimeType),
+});
+
+const KnowledgeBaseDetailPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const accessToken = useAuthStore(state => state.accessToken);
+
+  // State management
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [selectedDocuments, setSelectedDocuments] = useState<Set<string>>(new Set());
-  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([...mockDocuments]);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [knowledgeBaseTitle, setKnowledgeBaseTitle] = useState('知识库');
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: '',
     tagFilter: '',
@@ -103,44 +100,85 @@ const KnowledgeBaseDetailPage: React.FC = () => {
     typeFilter: ''
   });
 
-  // 设置页面标题
+  // Set page title
   useEffect(() => {
     const originalTitle = document.title;
-    document.title = '开源合规智能助手 - 知识库详情';
+    document.title = '开源合规助手 - 知识库详情';
     return () => { document.title = originalTitle; };
   }, []);
 
-  // 获取知识库ID并设置标题
-  const kbId = searchParams.get('kbId') || 'legal';
-  
-  const getKnowledgeBaseTitle = (kbId: string): string => {
-    switch (kbId) {
-      case 'legal':
-        return '法律知识库';
-      case 'internal':
-        return '内部知识库';
-      default:
-        return '自定义知识库';
+  // Get knowledge base ID and load data
+  const kbId = searchParams.get('kbId') || '';
+
+  const loadKnowledgeBase = async () => {
+    if (!kbId) return;
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/knowledge-bases/${kbId}`, {
+        method: 'GET',
+        headers: buildAuthHeaders(accessToken),
+      });
+      if (!response.ok) {
+        throw new Error('加载知识库失败');
+      }
+      const data = (await response.json()) as KnowledgeBaseResponse;
+      setKnowledgeBaseTitle(data.name || '知识库');
+    } catch (error) {
+      setKnowledgeBaseTitle('知识库');
     }
   };
 
-  const knowledgeBaseTitle = getKnowledgeBaseTitle(kbId);
+  const deleteDocument = async (docId: string) => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/documents/${docId}`, {
+      method: 'DELETE',
+      headers: buildAuthHeaders(accessToken),
+    });
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(message || '删除文档失败');
+    }
+  };
 
-  // 应用所有筛选条件
+  const loadDocuments = async () => {
+    if (!kbId) return;
+    setIsLoading(true);
+    setLoadError(null);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/knowledge-bases/${kbId}/documents?page=1&pageSize=100`,
+        {
+          method: 'GET',
+          headers: buildAuthHeaders(accessToken),
+        },
+      );
+      if (!response.ok) {
+        throw new Error('加载文档失败');
+      }
+      const data = await response.json();
+      const items = Array.isArray(data.items) ? data.items : [];
+      setDocuments(items.map(mapDocument));
+    } catch (error) {
+      setDocuments([]);
+      setLoadError('加载文档失败');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Apply all filters
   const applyFilters = () => {
-    const filtered = mockDocuments.filter(doc => {
-      // 搜索筛选
-      const matchesSearch = !filters.searchTerm || 
+    const filtered = documents.filter(doc => {
+      // Search filter
+      const matchesSearch = !filters.searchTerm ||
         doc.title.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
         doc.tags.some(tag => tag.toLowerCase().includes(filters.searchTerm.toLowerCase()));
-      
-      // 标签筛选
+
+      // Tag filter
       const matchesTag = !filters.tagFilter || doc.tags.includes(filters.tagFilter);
-      
-      // 时间筛选
+
+      // Time filter
       const matchesTime = !filters.timeFilter || checkTimeFilter(doc.uploadTime, filters.timeFilter);
-      
-      // 文件类型筛选
+
+      // File type filter
       const matchesType = !filters.typeFilter || doc.fileType.toLowerCase() === filters.typeFilter;
       
       return matchesSearch && matchesTag && matchesTime && matchesType;
@@ -151,7 +189,7 @@ const KnowledgeBaseDetailPage: React.FC = () => {
     setSelectedDocuments(new Set());
   };
 
-  // 检查时间筛选
+  // Check time filter
   const checkTimeFilter = (uploadTime: string, filter: string): boolean => {
     const uploadDate = new Date(uploadTime);
     const now = new Date();
@@ -170,29 +208,34 @@ const KnowledgeBaseDetailPage: React.FC = () => {
     }
   };
 
-  // 当筛选条件变化时应用筛选
+  // Apply filters when filter state changes
   useEffect(() => {
     applyFilters();
-  }, [filters]);
+  }, [filters, documents]);
 
-  // 获取当前页的文档
+  useEffect(() => {
+    loadKnowledgeBase();
+    loadDocuments();
+  }, [kbId, accessToken]);
+
+  // Get documents for current page
   const getCurrentPageDocuments = (): Document[] => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     return filteredDocuments.slice(startIndex, endIndex);
   };
 
-  // 处理搜索输入
+  // Handle search input
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, searchTerm: e.target.value }));
   };
 
-  // 处理筛选器变化
+  // Handle filter changes
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>, filterType: keyof FilterState) => {
     setFilters(prev => ({ ...prev, [filterType]: e.target.value }));
   };
 
-  // 处理全选
+  // Handle select all
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     const currentPageDocs = getCurrentPageDocuments();
@@ -208,7 +251,7 @@ const KnowledgeBaseDetailPage: React.FC = () => {
     }
   };
 
-  // 处理文档复选框变化
+  // Handle document checkbox change
   const handleDocumentCheckboxChange = (docId: string, checked: boolean) => {
     const newSelected = new Set(selectedDocuments);
     if (checked) {
@@ -219,57 +262,60 @@ const KnowledgeBaseDetailPage: React.FC = () => {
     setSelectedDocuments(newSelected);
   };
 
-  // 检查是否全选
+  // Check if all selected
   const isAllSelected = (): boolean => {
     const currentPageDocs = getCurrentPageDocuments();
     return currentPageDocs.length > 0 && currentPageDocs.every(doc => selectedDocuments.has(doc.id));
   };
 
-  // 检查是否部分选中
+  // Check if partially selected
   const isIndeterminate = (): boolean => {
     const currentPageDocs = getCurrentPageDocuments();
     const selectedCount = currentPageDocs.filter(doc => selectedDocuments.has(doc.id)).length;
     return selectedCount > 0 && selectedCount < currentPageDocs.length;
   };
 
-  // 处理批量删除
+  // Handle batch delete
   const handleBatchDelete = () => {
     if (selectedDocuments.size === 0) return;
-    
-    if (confirm(`确定要删除选中的 ${selectedDocuments.size} 个文档吗？`)) {
-      console.log('批量删除文档:', Array.from(selectedDocuments));
+
+    if (confirm(`确认删除选中的 ${selectedDocuments.size} 份文档吗？`)) {
+      console.log('Batch delete documents:', Array.from(selectedDocuments));
       alert('删除成功');
       setSelectedDocuments(new Set());
     }
   };
 
-  // 处理批量分类
+  // Handle batch categorize
   const handleBatchCategory = () => {
     if (selectedDocuments.size === 0) return;
-    
-    console.log('批量分类文档:', Array.from(selectedDocuments));
+
+    console.log('Batch categorize documents:', Array.from(selectedDocuments));
     alert('打开分类管理弹窗');
   };
 
-  // 处理文档导入
+  // Handle document import
   const handleImportDocs = () => {
-    console.log('打开文档导入弹窗，知识库ID:', kbId);
-    alert('打开文档导入弹窗');
+    if (!kbId) {
+      alert('缺少知识库ID。');
+      return;
+    }
+    navigate(`/kb-import?kbId=${kbId}`);
   };
 
-  // 处理新建文档
+  // Handle new document
   const handleNewDoc = () => {
-    console.log('打开文档编辑弹窗（新建模式），知识库ID:', kbId);
+    console.log('Open document editor modal (new mode), knowledge base ID:', kbId);
     alert('打开新建文档弹窗');
   };
 
-  // 处理页面大小变更
+  // Handle page size change
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setPageSize(parseInt(e.target.value));
     setCurrentPage(1);
   };
 
-  // 切换页面
+  // Change page
   const changePage = (page: number) => {
     const totalPages = Math.ceil(filteredDocuments.length / pageSize);
     if (page >= 1 && page <= totalPages) {
@@ -277,34 +323,37 @@ const KnowledgeBaseDetailPage: React.FC = () => {
     }
   };
 
-  // 处理表格排序
+  // Handle table sort
   const handleSort = (sortField: string) => {
-    console.log('排序字段:', sortField);
+    console.log('Sort field:', sortField);
     alert('排序功能');
   };
 
-  // 处理文档操作
+  // Handle document action
   const handleDocumentAction = (action: string, docId: string) => {
     switch (action) {
       case 'view':
       case 'edit':
-        console.log(`${action}文档:`, docId);
+        console.log(`${action} document:`, docId);
         alert('打开文档编辑弹窗');
         break;
       case 'category':
-        console.log('分类文档:', docId);
+        console.log('Categorize document:', docId);
         alert('打开分类管理弹窗');
         break;
       case 'delete':
-        if (confirm('确定要删除这个文档吗？')) {
-          console.log('删除文档:', docId);
-          alert('删除成功');
+        if (confirm('确认删除此文档吗？')) {
+          deleteDocument(docId)
+            .then(() => loadDocuments())
+            .catch((error) => {
+              alert(`删除失败：${error instanceof Error ? error.message : String(error)}`);
+            });
         }
         break;
     }
   };
 
-  // 生成页码按钮
+  // Generate page buttons
   const generatePageNumbers = () => {
     const totalPages = Math.ceil(filteredDocuments.length / pageSize);
     const maxVisiblePages = 5;
@@ -341,43 +390,43 @@ const KnowledgeBaseDetailPage: React.FC = () => {
 
   return (
     <div className={styles.pageWrapper}>
-      {/* 顶部导航栏 */}
+      {/* Top navigation */}
       <header className="fixed top-0 left-0 right-0 bg-white border-b border-border-light h-16 z-50">
         <div className="flex items-center justify-between h-full px-6">
-          {/* Logo和产品名称 */}
+          {/* Logo and product name */}
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <i className="fas fa-balance-scale text-white text-sm"></i>
             </div>
-            <h1 className="text-xl font-semibold text-text-primary">开源合规智能助手</h1>
+            <h1 className="text-xl font-semibold text-text-primary">开源合规助手</h1>
           </div>
-          
-          {/* 全局搜索框 */}
+
+          {/* Global search box */}
           <div className="flex-1 max-w-md mx-8">
             <div className="relative">
-              <input 
-                type="text" 
-                placeholder="搜索知识库、SBOM文件..." 
+              <input
+                type="text"
+                placeholder="搜索知识库、SBOM文件..."
                 className="w-full pl-10 pr-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-sm"></i>
             </div>
           </div>
-          
-          {/* 右侧操作区 */}
+
+          {/* Right-side actions */}
           <div className="flex items-center space-x-4">
-            {/* 消息通知 */}
+            {/* Notifications */}
             <button className="relative p-2 text-text-secondary hover:text-primary">
               <i className="fas fa-bell text-lg"></i>
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full"></span>
             </button>
-            
-            {/* 用户头像 */}
+
+            {/* User avatar */}
             <div className="relative">
               <Link to="/profile" className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50">
-                <img 
-                  src="https://s.coze.cn/image/wfXWrVnHyXM/" 
-                  alt="用户头像" 
+                <img
+                  src="https://s.coze.cn/image/wfXWrVnHyXM/"
+                  alt="User avatar"
                   className="w-8 h-8 rounded-full"
                 />
                 <span className="text-sm text-text-primary">张律师</span>
@@ -388,7 +437,7 @@ const KnowledgeBaseDetailPage: React.FC = () => {
         </div>
       </header>
 
-      {/* 左侧菜单 */}
+      {/* Left menu */}
       <aside className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light z-40 ${styles.sidebarTransition}`}>
         <nav className="p-4 space-y-2">
           <Link to="/home" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
@@ -405,7 +454,7 @@ const KnowledgeBaseDetailPage: React.FC = () => {
           </Link>
           <Link to="/report-list" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
             <i className="fas fa-chart-line text-lg"></i>
-            <span>报告列表</span>
+            <span>报告</span>
           </Link>
           <Link to="/user-manage" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
             <i className="fas fa-users text-lg"></i>
@@ -418,9 +467,9 @@ const KnowledgeBaseDetailPage: React.FC = () => {
         </nav>
       </aside>
 
-      {/* 主内容区 */}
+      {/* Main content */}
       <main className="ml-64 mt-16 p-6 min-h-screen">
-        {/* 页面头部 */}
+        {/* Page header */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
@@ -432,14 +481,14 @@ const KnowledgeBaseDetailPage: React.FC = () => {
               </nav>
             </div>
             <div className="flex items-center space-x-3">
-              <button 
+              <button
                 onClick={handleImportDocs}
                 className={`${styles.actionButton} flex items-center space-x-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700`}
               >
                 <i className="fas fa-upload text-sm"></i>
                 <span>导入文档</span>
               </button>
-              <button 
+              <button
                 onClick={handleNewDoc}
                 className={`${styles.actionButton} flex items-center space-x-2 px-4 py-2 border border-border-light text-text-primary rounded-lg hover:bg-gray-50`}
               >
@@ -450,15 +499,15 @@ const KnowledgeBaseDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 工具栏区域 */}
+        {/* Toolbar area */}
         <div className="bg-white rounded-xl shadow-card p-4 mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-            {/* 搜索框 */}
+            {/* Search box */}
             <div className="flex-1 max-w-md">
               <div className="relative">
-                <input 
-                  type="text" 
-                  placeholder="搜索文档标题或内容..." 
+                <input
+                  type="text"
+                  placeholder="搜索文档标题或内容..."
                   value={filters.searchTerm}
                   onChange={handleSearchInputChange}
                   className={`w-full pl-10 pr-4 py-2 border border-border-light rounded-lg ${styles.searchInput}`}
@@ -466,34 +515,34 @@ const KnowledgeBaseDetailPage: React.FC = () => {
                 <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-sm"></i>
               </div>
             </div>
-            
-            {/* 筛选条件 */}
+
+            {/* Filters */}
             <div className="flex items-center space-x-4">
-              <select 
+              <select
                 value={filters.tagFilter}
                 onChange={(e) => handleFilterChange(e, 'tagFilter')}
                 className={`px-3 py-2 border border-border-light rounded-lg ${styles.filterSelect}`}
               >
                 <option value="">全部标签</option>
-                <option value="许可证">许可证</option>
-                <option value="专利">专利</option>
-                <option value="版权">版权</option>
-                <option value="合规">合规</option>
+                <option value="License">许可证</option>
+                <option value="Patent">专利</option>
+                <option value="Copyright">著作权</option>
+                <option value="Compliance">合规</option>
               </select>
-              
-              <select 
+
+              <select
                 value={filters.timeFilter}
                 onChange={(e) => handleFilterChange(e, 'timeFilter')}
                 className={`px-3 py-2 border border-border-light rounded-lg ${styles.filterSelect}`}
               >
                 <option value="">全部时间</option>
                 <option value="today">今天</option>
-                <option value="week">最近一周</option>
-                <option value="month">最近一月</option>
-                <option value="quarter">最近三月</option>
+                <option value="week">最近7天</option>
+                <option value="month">最近30天</option>
+                <option value="quarter">最近3个月</option>
               </select>
-              
-              <select 
+
+              <select
                 value={filters.typeFilter}
                 onChange={(e) => handleFilterChange(e, 'typeFilter')}
                 className={`px-3 py-2 border border-border-light rounded-lg ${styles.filterSelect}`}
@@ -505,10 +554,10 @@ const KnowledgeBaseDetailPage: React.FC = () => {
                 <option value="md">Markdown</option>
               </select>
             </div>
-            
-            {/* 批量操作 */}
+
+            {/* Batch actions */}
             <div className="flex items-center space-x-2">
-              <button 
+              <button
                 onClick={handleBatchDelete}
                 disabled={selectedDocuments.size === 0}
                 className={`${styles.actionButton} px-3 py-2 text-danger border border-danger rounded-lg hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -516,7 +565,7 @@ const KnowledgeBaseDetailPage: React.FC = () => {
                 <i className="fas fa-trash text-sm"></i>
                 <span className="ml-1">批量删除</span>
               </button>
-              <button 
+              <button
                 onClick={handleBatchCategory}
                 disabled={selectedDocuments.size === 0}
                 className={`${styles.actionButton} px-3 py-2 text-primary border border-primary rounded-lg hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed`}
@@ -528,14 +577,14 @@ const KnowledgeBaseDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 内容展示区域 */}
+        {/* Content area */}
         <div className="bg-white rounded-xl shadow-card overflow-hidden">
-          {/* 表格头部 */}
+          {/* Table header */}
           <div className="px-6 py-4 border-b border-border-light">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <label className="flex items-center space-x-2">
-                  <input 
+                  <input
                     type="checkbox" 
                     checked={isAllSelected()}
                     ref={(input) => {
@@ -546,11 +595,11 @@ const KnowledgeBaseDetailPage: React.FC = () => {
                   />
                   <span className="text-sm text-text-secondary">全选</span>
                 </label>
-                <span className="text-sm text-text-secondary">共 <span>{totalItems}</span> 个文档</span>
+                <span className="text-sm text-text-secondary">共 <span>{totalItems}</span> 份文档</span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-text-secondary">每页显示</span>
-                <select 
+                <span className="text-sm text-text-secondary">每页</span>
+                <select
                   value={pageSize}
                   onChange={handlePageSizeChange}
                   className="px-2 py-1 border border-border-light rounded text-sm"
@@ -563,8 +612,8 @@ const KnowledgeBaseDetailPage: React.FC = () => {
               </div>
             </div>
           </div>
-          
-          {/* 表格内容 */}
+
+          {/* Table body */}
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
@@ -590,14 +639,14 @@ const KnowledgeBaseDetailPage: React.FC = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     标签
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => handleSort('uploader')}
                   >
                     上传人
                     <i className="fas fa-sort ml-1"></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => handleSort('upload_time')}
                   >
@@ -653,21 +702,21 @@ const KnowledgeBaseDetailPage: React.FC = () => {
                       <div className="flex items-center space-x-2">
                         <button 
                           onClick={() => handleDocumentAction('edit', doc.id)}
-                          className="text-primary hover:text-blue-700" 
+                          className="text-primary hover:text-blue-700"
                           title="编辑"
                         >
                           <i className="fas fa-edit"></i>
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDocumentAction('category', doc.id)}
-                          className="text-warning hover:text-yellow-700" 
+                          className="text-warning hover:text-yellow-700"
                           title="分类"
                         >
                           <i className="fas fa-tags"></i>
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDocumentAction('delete', doc.id)}
-                          className="text-danger hover:text-red-700" 
+                          className="text-danger hover:text-red-700"
                           title="删除"
                         >
                           <i className="fas fa-trash"></i>
@@ -680,15 +729,15 @@ const KnowledgeBaseDetailPage: React.FC = () => {
             </table>
           </div>
           
-          {/* 分页区域 */}
+          {/* Pagination */}
           <div className="px-6 py-4 border-t border-border-light">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-sm text-text-secondary">
                 <span>显示</span>
                 <span>{startItem}</span>
-                <span>-</span>
+                <span>至</span>
                 <span>{endItem}</span>
-                <span>共</span>
+                <span>/</span>
                 <span>{totalItems}</span>
                 <span>条</span>
               </div>

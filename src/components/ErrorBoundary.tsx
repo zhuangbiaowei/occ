@@ -1,7 +1,6 @@
-// @ts-nocheck
 // src/components/ErrorBoundary.tsx
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -25,22 +24,25 @@ export class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  // 3. 在错误被捕获后，这个生命周期方法被调用，适合执行“副作用”，比如记日志
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  // 3. 在错误被捕获后，这个生命周期方法被调用，适合执行"副作用"，比如记日志
+  public componentDidCatch(error: Error, _errorInfo: ErrorInfo) {
     if (!import.meta.env.DEV) {
       return;
     }
     console.log('ErrorBoundary 成功捕获错误，准备发送日志...');
-    
+
     // send_error_message_to_parent_window 向父窗口发送错误信息
     if (typeof window === 'object' && window.parent) {
-      window.parent.postMessage({
-        type: 'chux:error',
-        error: {
-          message: error.message || error.statusText,
-          stack: error.stack,
+      window.parent.postMessage(
+        {
+          type: 'chux:error',
+          error: {
+            message: error.message || (error as { statusText?: string }).statusText,
+            stack: error.stack,
+          },
         },
-      }, 'https://www.coze.cn');
+        'https://www.coze.cn'
+      );
     }
   }
 

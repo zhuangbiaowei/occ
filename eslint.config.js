@@ -11,8 +11,8 @@ export default [
     ignores: ['dist/'],
   },
 
-  js.configs.recommended,          
-  ...tseslint.configs.recommended,     
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
 
   {

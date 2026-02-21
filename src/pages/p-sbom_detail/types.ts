@@ -1,5 +1,3 @@
-
-
 export interface SbomData {
   fileName: string;
   uploader: string;
@@ -19,4 +17,3 @@ export interface Component {
   type: string;
   description: string;
 }
-

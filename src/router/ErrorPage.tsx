@@ -1,9 +1,9 @@
 // src/pages/ErrorPage.tsx
-import { useRouteError, useNavigate } from "react-router-dom";
+import { useRouteError, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 export default function ErrorPage() {
-  const error = useRouteError() as any; // 类型可以更具体
+  const error = useRouteError() as { message?: string; statusText?: string; stack?: string };
   const navigate = useNavigate();
   console.error(error);
 
@@ -13,13 +13,16 @@ export default function ErrorPage() {
     }
     // send_error_message_to_parent_window 向父窗口发送错误信息
     if (typeof window === 'object' && window.parent) {
-      window.parent.postMessage({
-        type: 'chux:error',
-        error: {
-          message: error.message || error.statusText,
-          stack: error.stack,
+      window.parent.postMessage(
+        {
+          type: 'chux:error',
+          error: {
+            message: error.message || error.statusText || 'Unknown error',
+            stack: error.stack,
+          },
         },
-      }, 'https://www.coze.cn');
+        'https://www.coze.cn'
+      );
     }
   }, [error]);
 
@@ -33,7 +36,8 @@ export default function ErrorPage() {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+    fontFamily:
+      'system-ui, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, \'Noto Sans\', sans-serif, \'Apple Color Emoji\', \'Segoe UI Emoji\', \'Segoe UI Symbol\', \'Noto Color Emoji\'',
     background: 'linear-gradient(180deg, #f3f5ff 0%, #ffffff 100%)',
     color: '#2d3748',
     textAlign: 'center',
@@ -76,14 +80,11 @@ export default function ErrorPage() {
     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
   };
 
-
   return (
     <div style={containerStyle}>
       <h1 style={headingStyle}>出错了!</h1>
       <p style={textStyle}>抱歉，发生了错误，页面无法显示。</p>
-      <p style={subTextStyle}>
-        {error.statusText || error.message}
-      </p>
+      <p style={subTextStyle}>{error.statusText || error.message || 'Unknown error'}</p>
       <button onClick={goBack} style={buttonStyle}>
         返回上一页
       </button>

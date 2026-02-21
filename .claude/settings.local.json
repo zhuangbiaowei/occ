@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx eslint src/pages/p-home/index.tsx --no-fix)",
+      "Bash(npx eslint:*)",
+      "Bash(npm run lint)",
+      "Bash(cat:*)",
+      "Bash(while:*)",
+      "Bash(do:*)",
+      "Bash(done)",
+      "Bash(cd:*)",
+      "Bash(sudo -u postgres psql:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run start:dev)",
+      "Bash(netstat:*)",
+      "Bash(timeout 30 npm run start:dev:*)",
+      "Bash(npm run build)",
+      "Bash(timeout:*)",
+      "Bash(npx nest build:*)",
+      "Bash(npx:*)",
+      "Bash(sudo systemctl status:*)"
+    ]
+  }
+}

@@ -1,9 +1,11 @@
-# 开源合规智能助手系统开发计划
+﻿# 开源合规智能助手系统开发计划
 
 ## 项目概述
+
 基于AI和双知识库的开源合规评审平台，为律师事务所提供高效、准确的开源软件合规性评审服务。
 
 ## 技术栈
+
 - **前端**: React 18 + TypeScript + Vite + Ant Design 5.x + Zustand + Tailwind CSS
 - **后端**: NestJS + TypeScript + PostgreSQL 15+ + Redis 7+ + Elasticsearch 8+
 - **AI服务**: Python FastAPI + LangChain + 向量数据库(Pinecone/Weaviate)
@@ -14,20 +16,23 @@
 ## 第一阶段：基础架构搭建 (预计2周)
 
 ### 1.1 项目初始化
-- [ ] 创建前端项目结构，配置Vite + React 18 + TypeScript
-- [ ] 配置Tailwind CSS和Ant Design主题
-- [ ] 设置Zustand状态管理和React Query
-- [ ] 创建基础路由结构和布局组件
-- [ ] 配置ESLint和Prettier代码规范
+
+- [✅] 创建前端项目结构，配置Vite + React 18 + TypeScript
+- [✅] 配置Tailwind CSS和Ant Design主题
+- [✅] 设置Zustand状态管理和React Query
+- [✅] 创建基础路由结构和布局组件
+- [✅] 配置ESLint和Prettier代码规范
 
 ### 1.2 后端项目搭建
-- [ ] 初始化NestJS项目，配置TypeScript
-- [ ] 配置PostgreSQL数据库连接和TypeORM
-- [ ] 配置Redis连接和缓存模块
-- [ ] 配置Elasticsearch连接
-- [ ] 创建基础模块结构（用户、认证、知识库、SBOM、评审、报告）
+
+- [✅] 初始化NestJS项目，配置TypeScript
+- [✅] 配置PostgreSQL数据库连接和TypeORM
+- [✅] 配置Redis连接和缓存模块
+- [✅] 配置Elasticsearch连接
+- [✅] 创建基础模块结构（用户、认证、知识库、SBOM、评审、报告）
 
 ### 1.3 Docker环境配置
+
 - [ ] 编写后端Dockerfile
 - [ ] 编写前端Dockerfile
 - [ ] 配置docker-compose.yml（PostgreSQL、Redis、Elasticsearch、MinIO）
@@ -39,38 +44,44 @@
 ## 第二阶段：用户认证与权限系统 (预计1.5周)
 
 ### 2.1 用户管理模块
-- [ ] 实现用户注册API（POST /api/v1/auth/register）
-- [ ] 实现用户登录API（POST /api/v1/auth/login）
-- [ ] 实现JWT token生成和验证
-- [ ] 实现Token刷新机制（POST /api/v1/auth/refresh）
-- [ ] 实现获取当前用户信息API（GET /api/v1/auth/me）
+
+- [✅] 实现用户注册API（POST /api/v1/auth/register）
+- [✅] 实现用户登录API（POST /api/v1/auth/login）
+- [✅] 实现JWT token生成和验证
+- [✅] 实现Token刷新机制（POST /api/v1/auth/refresh）
+- [✅] 实现获取当前用户信息API（GET /api/v1/auth/me）
 
 ### 2.2 权限管理模块
-- [ ] 创建角色表（roles）和权限配置
-- [ ] 实现角色管理CRUD API
-- [ ] 实现用户角色关联功能
-- [ ] 创建权限守卫（Permission Guard）
-- [ ] 实现前端权限控制组件
+
+- [✅] 创建角色表（roles）和权限配置
+- [✅] 实现角色管理CRUD API
+- [✅] 实现用户角色关联功能
+- [✅] 创建权限守卫（Permission Guard）
+- [✅] 实现前端权限控制组件
 
 ### 2.3 前端登录页面
-- [ ] 创建登录页面UI（p-login）
-- [ ] 实现注册页面UI（p-register）
-- [ ] 集成JWT token存储（localStorage）
-- [ ] 实现路由守卫和权限验证
-- [ ] 创建用户个人中心页面（p-profile）
+
+- [✅] 创建登录页面UI（p-login）
+- [✅] 实现注册页面UI（p-register）
+- [✅] 集成JWT token存储（localStorage）
+- [✅] 实现路由守卫和权限验证
+- [✅] 创建用户个人中心页面（p-profile）
+- [✅] 实现用户退出登录的功能
 
 ---
 
 ## 第三阶段：知识库管理模块 (预计2.5周)
 
 ### 3.1 后端知识库API
-- [ ] 实现知识库CRUD API（GET/POST/PUT/DELETE /api/v1/knowledge-bases）
-- [ ] 实现知识文档CRUD API
+
+- [✅] 实现知识库CRUD API（GET/POST/PUT/DELETE /api/v1/knowledge-bases）
+- [✅] 实现知识文档CRUD API
 - [ ] 实现文档上传和文件存储（MinIO集成）
 - [ ] 实现文档版本管理功能
 - [ ] 实现文档标签系统
 
 ### 3.2 文档解析和索引
+
 - [ ] 实现PDF文档解析（pdf-lib）
 - [ ] 实现Word文档解析（mammoth.js）
 - [ ] 实现文本提取和清洗
@@ -78,11 +89,12 @@
 - [ ] 实现文档内容索引和搜索API
 
 ### 3.3 前端知识库页面
-- [ ] 创建知识库列表页面（p-kb_list）
-- [ ] 创建知识库分类管理页面（p-kb_category）
-- [ ] 创建知识文档详情页面（p-kb_detail）
-- [ ] 创建知识文档编辑页面（p-kb_edit）
-- [ ] 创建文档导入页面（p-kb_import）
+
+- [✅] 创建知识库列表页面（p-kb_list）
+- [✅] 创建知识库分类管理页面（p-kb_category）
+- [✅] 创建知识文档详情页面（p-kb_detail）
+- [✅] 创建知识文档编辑页面（p-kb_edit）
+- [✅] 创建文档导入页面（p-kb_import）
 - [ ] 实现全文搜索功能UI
 - [ ] 实现文档标签和筛选功能
 
@@ -91,12 +103,14 @@
 ## 第四阶段：SBOM处理模块 (预计2周)
 
 ### 4.1 SBOM上传和存储
+
 - [ ] 实现SBOM文件上传API（POST /api/v1/sboms/upload）
 - [ ] 集成MinIO文件存储
 - [ ] 实现文件哈希校验和重复检测
 - [ ] 创建SBOM文件表（sbom_files）和组件表（sbom_components）
 
 ### 4.2 SBOM解析引擎
+
 - [ ] 实现SPDX格式解析器
 - [ ] 实现CycloneDX格式解析器
 - [ ] 实现SWID格式解析器
@@ -104,12 +118,14 @@
 - [ ] 集成消息队列（RabbitMQ）实现异步解析
 
 ### 4.3 许可证管理
+
 - [ ] 创建许可证表（licenses）
 - [ ] 实现许可证数据库初始化
 - [ ] 实现许可证风险等级评估
 - [ ] 创建许可证义务配置
 
 ### 4.4 前端SBOM管理页面
+
 - [ ] 创建SBOM列表页面（p-sbom_list）
 - [ ] 创建SBOM上传页面（p-sbom_upload）
 - [ ] 创建SBOM详情页面（p-sbom_detail）
@@ -121,24 +137,28 @@
 ## 第五阶段：合规评审核心模块 (预计3周)
 
 ### 5.1 评审流程设计
+
 - [ ] 创建评审结果表（review_results）和风险点表（risk_items）
 - [ ] 实现创建评审任务API（POST /api/v1/reviews）
 - [ ] 实现评审结果CRUD API
 - [ ] 实现风险点管理API
 
 ### 5.2 AI评审集成
+
 - [ ] 实现AI评审触发API（POST /api/v1/reviews/:reviewId/ai-review）
 - [ ] 实现评审状态查询API
 - [ ] 集成AI服务客户端
 - [ ] 实现双知识库检索逻辑
 
 ### 5.3 人工评审功能
+
 - [ ] 实现富文本编辑器集成（Slate.js）
 - [ ] 实现评审意见编辑和保存
 - [ ] 实现风险点人工调整功能
 - [ ] 实现评审历史版本管理
 
 ### 5.4 前端评审页面
+
 - [ ] 创建评审列表页面（p-review_list）
 - [ ] 创建评审结果页面（p-review_result）
 - [ ] 实现AI评审意见展示
@@ -150,12 +170,14 @@
 ## 第六阶段：AI服务集成 (预计2.5周)
 
 ### 6.1 AI服务搭建
+
 - [ ] 初始化Python FastAPI项目
 - [ ] 配置LangChain框架
 - [ ] 集成OpenAI API（GPT-4）
 - [ ] 配置向量数据库（Pinecone/Weaviate）
 
 ### 6.2 知识检索系统
+
 - [ ] 实现文本嵌入生成（text-embedding-ada-002）
 - [ ] 实现向量存储和检索
 - [ ] 实现法律知识库检索接口
@@ -163,6 +185,7 @@
 - [ ] 实现混合检索策略（全文+向量）
 
 ### 6.3 评审意见生成
+
 - [ ] 设计评审意见生成Prompt模板
 - [ ] 实现风险分析引擎
 - [ ] 实现许可证冲突检测
@@ -170,6 +193,7 @@
 - [ ] 实现案例匹配功能
 
 ### 6.4 AI服务优化
+
 - [ ] 实现嵌入向量缓存机制
 - [ ] 实现批量处理优化
 - [ ] 实现流式响应
@@ -181,24 +205,28 @@
 ## 第七阶段：报告生成模块 (预计2周)
 
 ### 7.1 报告模板管理
+
 - [ ] 创建报告模板表（report_templates）
 - [ ] 实现模板CRUD API
 - [ ] 实现模板版本管理
 - [ ] 集成富文本编辑器（ProseMirror）
 
 ### 7.2 报告生成引擎
+
 - [ ] 实现报告生成API（POST /api/v1/reports/generate）
 - [ ] 集成模板引擎（Handlebars）
 - [ ] 实现占位符替换逻辑
 - [ ] 实现异步报告生成（消息队列）
 
 ### 7.3 多格式导出
+
 - [ ] 实现PDF生成（pdf-lib）
 - [ ] 实现Word生成（docx.js）
 - [ ] 实现报告文件存储和下载
 - [ ] 实现报告生成状态查询
 
 ### 7.4 前端报告页面
+
 - [ ] 创建报告模板管理页面
 - [ ] 创建报告生成页面（p-report_generate）
 - [ ] 创建报告列表页面（p-report_list）
@@ -209,24 +237,28 @@
 ## 第八阶段：系统设置与日志 (预计1.5周)
 
 ### 8.1 系统配置管理
+
 - [ ] 创建系统配置表（system_configs）
 - [ ] 实现系统配置CRUD API
 - [ ] 实现配置缓存机制
 - [ ] 创建系统设置页面（p-sys_settings）
 
 ### 8.2 操作日志系统
+
 - [ ] 创建操作日志表（operation_logs）
 - [ ] 实现操作日志记录中间件
 - [ ] 实现日志查询API
 - [ ] 创建日志查看页面
 
 ### 8.3 数据备份功能
+
 - [ ] 创建备份记录表（backup_records）
 - [ ] 实现数据备份API（PostgreSQL + MinIO）
 - [ ] 实现备份状态查询
 - [ ] 创建备份管理页面
 
 ### 8.4 用户管理
+
 - [ ] 创建用户管理页面（p-user_manage）
 - [ ] 创建用户编辑页面（p-user_edit）
 - [ ] 创建角色管理页面（p-role_manage）
@@ -237,12 +269,14 @@
 ## 第九阶段：测试与优化 (预计2周)
 
 ### 9.1 单元测试
+
 - [ ] 编写后端服务单元测试（Jest）
 - [ ] 编写前端组件单元测试（React Testing Library）
 - [ ] 实现API接口测试
 - [ ] 实现核心算法测试
 
 ### 9.2 集成测试
+
 - [ ] 测试用户认证流程
 - [ ] 测试知识库完整流程
 - [ ] 测试SBOM上传和解析流程
@@ -250,6 +284,7 @@
 - [ ] 测试报告生成流程
 
 ### 9.3 性能优化
+
 - [ ] 数据库查询优化和索引优化
 - [ ] Redis缓存策略优化
 - [ ] 前端性能优化（代码分割、懒加载）
@@ -257,6 +292,7 @@
 - [ ] 文件上传下载优化
 
 ### 9.4 安全测试
+
 - [ ] JWT安全性测试
 - [ ] API权限测试
 - [ ] SQL注入防护测试
@@ -268,24 +304,28 @@
 ## 第十阶段：部署与运维 (预计1周)
 
 ### 10.1 生产环境配置
+
 - [ ] 配置Nginx反向代理和负载均衡
 - [ ] 配置SSL证书
 - [ ] 配置Web应用防火墙
 - [ ] 配置CDN静态资源加速
 
 ### 10.2 监控和日志
+
 - [ ] 配置Prometheus监控
 - [ ] 配置Grafana监控大盘
 - [ ] 配置ELK日志系统
 - [ ] 实现关键指标监控
 
 ### 10.3 CI/CD流程
+
 - [ ] 配置GitHub Actions工作流
 - [ ] 实现自动化测试
 - [ ] 实现自动化构建和部署
 - [ ] 配置环境变量和密钥管理
 
 ### 10.4 文档和交付
+
 - [ ] 编写API文档（Swagger）
 - [ ] 编写用户操作手册
 - [ ] 编写部署文档
@@ -296,6 +336,7 @@
 ## 项目总览
 
 ### 开发周期估算
+
 - **总时长**: 约18周（4.5个月）
 - **前端开发**: 约8周
 - **后端开发**: 约10周
@@ -304,6 +345,7 @@
 - **部署运维**: 约1周
 
 ### 关键里程碑
+
 1. **M1**: 基础架构 + 用户系统（3.5周）
 2. **M2**: 知识库模块完成（6周）
 3. **M3**: SBOM处理完成（8周）
@@ -313,12 +355,14 @@
 7. **M7**: 正式上线（16周）
 
 ### 风险点
+
 - AI服务响应时间和成本控制
 - 大文件SBOM解析性能
 - 双知识库检索准确性
 - 系统安全性保障
 
 ### 后续扩展
+
 - 多租户支持
 - 更多SBOM格式支持
 - AI模型插件化

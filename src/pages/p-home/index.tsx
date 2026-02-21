@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './styles.module.css';
@@ -11,7 +9,9 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const originalTitle = document.title;
     document.title = '开源合规智能助手 - 首页';
-    return () => { document.title = originalTitle; };
+    return () => {
+      document.title = originalTitle;
+    };
   }, []);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const HomePage: React.FC = () => {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      weekday: 'long'
+      weekday: 'long',
     });
     setCurrentDate(date);
   }, []);
@@ -62,43 +62,43 @@ const HomePage: React.FC = () => {
             </div>
             <h1 className="text-xl font-semibold text-text-primary">开源合规智能助手</h1>
           </div>
-          
+
           {/* 全局搜索框 */}
           <div className="flex-1 max-w-md mx-8">
             <div className="relative">
-              <input 
-                type="text" 
-                placeholder="搜索知识库、SBOM文件..." 
+              <input
+                type="text"
+                placeholder="搜索知识库、SBOM文件..."
                 value={searchInputValue}
-                onChange={(e) => setSearchInputValue(e.target.value)}
+                onChange={e => setSearchInputValue(e.target.value)}
                 onKeyPress={handleSearchKeyPress}
                 className="w-full pl-10 pr-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-sm"></i>
             </div>
           </div>
-          
+
           {/* 右侧操作区 */}
           <div className="flex items-center space-x-4">
             {/* 消息通知 */}
-            <button 
+            <button
               onClick={handleNotificationClick}
               className="relative p-2 text-text-secondary hover:text-primary"
             >
               <i className="fas fa-bell text-lg"></i>
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full"></span>
             </button>
-            
+
             {/* 用户头像 */}
             <div className="relative">
-              <Link 
+              <Link
                 to="/profile"
                 className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50"
               >
-                <img 
-                  src="https://s.coze.cn/image/emDcnxXFD2Q/" 
-                  alt="用户头像" 
-                  className="w-8 h-8 rounded-full" 
+                <img
+                  src="https://s.coze.cn/image/emDcnxXFD2Q/"
+                  alt="用户头像"
+                  className="w-8 h-8 rounded-full"
                   data-category="人物"
                 />
                 <span className="text-sm text-text-primary">张律师</span>
@@ -110,45 +110,47 @@ const HomePage: React.FC = () => {
       </header>
 
       {/* 左侧菜单 */}
-      <aside className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light ${styles.sidebarTransition} z-40`}>
+      <aside
+        className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light ${styles.sidebarTransition} z-40`}
+      >
         <nav className="p-4 space-y-2">
-          <Link 
-            to="/home" 
+          <Link
+            to="/home"
             className={`${styles.navItem} ${styles.navItemActive} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium`}
           >
             <i className="fas fa-home text-lg"></i>
             <span>首页</span>
           </Link>
-          <Link 
-            to="/sbom-list" 
+          <Link
+            to="/sbom-list"
             className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
           >
             <i className="fas fa-file-alt text-lg"></i>
             <span>SBOM管理</span>
           </Link>
-          <Link 
-            to="/kb-list" 
+          <Link
+            to="/kb-list"
             className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
           >
             <i className="fas fa-book text-lg"></i>
             <span>知识库管理</span>
           </Link>
-          <Link 
-            to="/report-list" 
+          <Link
+            to="/report-list"
             className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
           >
             <i className="fas fa-chart-line text-lg"></i>
             <span>报告列表</span>
           </Link>
-          <Link 
-            to="/user-manage" 
+          <Link
+            to="/user-manage"
             className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
           >
             <i className="fas fa-users text-lg"></i>
             <span>用户管理</span>
           </Link>
-          <Link 
-            to="/sys-settings" 
+          <Link
+            to="/sys-settings"
             className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
           >
             <i className="fas fa-cog text-lg"></i>
@@ -177,7 +179,7 @@ const HomePage: React.FC = () => {
 
         {/* 概览卡片区 */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link 
+          <Link
             to="/sbom-list?status=pending"
             className={`bg-white rounded-xl shadow-card p-6 ${styles.cardHover} cursor-pointer block`}
           >
@@ -196,7 +198,7 @@ const HomePage: React.FC = () => {
             </div>
           </Link>
 
-          <Link 
+          <Link
             to="/sbom-list?status=completed"
             className={`bg-white rounded-xl shadow-card p-6 ${styles.cardHover} cursor-pointer block`}
           >
@@ -215,7 +217,7 @@ const HomePage: React.FC = () => {
             </div>
           </Link>
 
-          <Link 
+          <Link
             to="/kb-list"
             className={`bg-white rounded-xl shadow-card p-6 ${styles.cardHover} cursor-pointer block`}
           >
@@ -234,7 +236,7 @@ const HomePage: React.FC = () => {
             </div>
           </Link>
 
-          <Link 
+          <Link
             to="/user-manage"
             className={`bg-white rounded-xl shadow-card p-6 ${styles.cardHover} cursor-pointer block`}
           >
@@ -258,7 +260,7 @@ const HomePage: React.FC = () => {
         <section className="bg-white rounded-xl shadow-card p-6 mb-8">
           <h3 className="text-lg font-semibold text-text-primary mb-4">快捷操作</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button 
+            <button
               onClick={handleQuickUploadSbom}
               className="flex items-center space-x-3 p-4 border border-border-light rounded-lg hover:border-primary hover:bg-blue-50 transition-colors"
             >
@@ -271,7 +273,7 @@ const HomePage: React.FC = () => {
               </div>
             </button>
 
-            <Link 
+            <Link
               to="/kb-list"
               className="flex items-center space-x-3 p-4 border border-border-light rounded-lg hover:border-primary hover:bg-blue-50 transition-colors"
             >
@@ -284,7 +286,7 @@ const HomePage: React.FC = () => {
               </div>
             </Link>
 
-            <Link 
+            <Link
               to="/report-list"
               className="flex items-center space-x-3 p-4 border border-border-light rounded-lg hover:border-primary hover:bg-blue-50 transition-colors"
             >
@@ -297,7 +299,7 @@ const HomePage: React.FC = () => {
               </div>
             </Link>
 
-            <Link 
+            <Link
               to="/report-list"
               className="flex items-center space-x-3 p-4 border border-border-light rounded-lg hover:border-primary hover:bg-blue-50 transition-colors"
             >
@@ -316,8 +318,8 @@ const HomePage: React.FC = () => {
         <section className="bg-white rounded-xl shadow-card p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-text-primary">最近活动</h3>
-            <a 
-              href="#" 
+            <a
+              href="#"
               onClick={handleViewAllActivities}
               className="text-sm text-primary hover:text-blue-700"
             >
@@ -330,7 +332,9 @@ const HomePage: React.FC = () => {
                 <i className="fas fa-check text-success text-xs"></i>
               </div>
               <div className="flex-1">
-                <p className="text-sm text-text-primary">完成了SBOM文件"project-x-v2.1.spdx"的合规评审</p>
+                <p className="text-sm text-text-primary">
+                  完成了SBOM文件&apos;project-x-v2.1.spdx&apos;的合规评审
+                </p>
                 <p className="text-xs text-text-secondary mt-1">2小时前</p>
               </div>
             </div>
@@ -340,7 +344,7 @@ const HomePage: React.FC = () => {
                 <i className="fas fa-upload text-primary text-xs"></i>
               </div>
               <div className="flex-1">
-                <p className="text-sm text-text-primary">上传了新的SBOM文件"mobile-app-v1.5.cdx"</p>
+                <p className="text-sm text-text-primary">上传了新的SBOM文件&apos;mobile-app-v1.5.cdx&apos;</p>
                 <p className="text-xs text-text-secondary mt-1">4小时前</p>
               </div>
             </div>
@@ -350,7 +354,9 @@ const HomePage: React.FC = () => {
                 <i className="fas fa-book text-info text-xs"></i>
               </div>
               <div className="flex-1">
-                <p className="text-sm text-text-primary">向法律知识库添加了新文档"开源许可证指南v2.0.pdf"</p>
+                <p className="text-sm text-text-primary">
+                  向法律知识库添加了新文档&apos;开源许可证指南v2.0.pdf&apos;
+                </p>
                 <p className="text-xs text-text-secondary mt-1">1天前</p>
               </div>
             </div>
@@ -360,7 +366,9 @@ const HomePage: React.FC = () => {
                 <i className="fas fa-file-pdf text-warning text-xs"></i>
               </div>
               <div className="flex-1">
-                <p className="text-sm text-text-primary">生成了评审报告"电商平台合规评审报告.pdf"</p>
+                <p className="text-sm text-text-primary">
+                  生成了评审报告&apos;电商平台合规评审报告.pdf&apos;
+                </p>
                 <p className="text-xs text-text-secondary mt-1">2天前</p>
               </div>
             </div>
@@ -372,4 +380,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-

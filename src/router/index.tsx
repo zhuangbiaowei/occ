@@ -28,19 +28,32 @@ function Listener() {
   const location = useLocation();
   useEffect(() => {
     const pageId = 'P-' + location.pathname.replace('/', '').toUpperCase();
-    console.log('当前pageId:', pageId, ', pathname:', location.pathname, ', search:', location.search);
+    console.log(
+      '当前pageId:',
+      pageId,
+      ', pathname:',
+      location.pathname,
+      ', search:',
+      location.search
+    );
     if (typeof window === 'object' && window.parent && window.parent.postMessage) {
-      window.parent.postMessage({
-        type: 'chux-path-change',
-        pageId: pageId,
-        pathname: location.pathname,
-        search: location.search,
-      }, '*');
+      window.parent.postMessage(
+        {
+          type: 'chux-path-change',
+          pageId: pageId,
+          pathname: location.pathname,
+          search: location.search,
+        },
+        '*'
+      );
     }
   }, [location]);
 
   return <Outlet />;
 }
+
+// 将 Listener 组件导出为默认导出，避免 Fast refresh 警告
+export { Listener };
 
 // 使用 createBrowserRouter 创建路由实例
 const router = createBrowserRouter([
@@ -49,186 +62,186 @@ const router = createBrowserRouter([
     element: <Listener />,
     children: [
       {
-    path: '/',
-    element: <Navigate to='/login' replace={true} />,
-  },
+        path: '/',
+        element: <Navigate to="/login" replace={true} />,
+      },
       {
-    path: '/login',
-    element: (
-      <ErrorBoundary>
-        <P_login />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/login',
+        element: (
+          <ErrorBoundary>
+            <P_login />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/register',
-    element: (
-      <ErrorBoundary>
-        <P_register />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/register',
+        element: (
+          <ErrorBoundary>
+            <P_register />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/home',
-    element: (
-      <ErrorBoundary>
-        <P_home />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/home',
+        element: (
+          <ErrorBoundary>
+            <P_home />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/sbom-list',
-    element: (
-      <ErrorBoundary>
-        <P_sbom_list />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/sbom-list',
+        element: (
+          <ErrorBoundary>
+            <P_sbom_list />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/sbom-detail',
-    element: (
-      <ErrorBoundary>
-        <P_sbom_detail />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/sbom-detail',
+        element: (
+          <ErrorBoundary>
+            <P_sbom_detail />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/review-result',
-    element: (
-      <ErrorBoundary>
-        <P_review_result />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/review-result',
+        element: (
+          <ErrorBoundary>
+            <P_review_result />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/report-list',
-    element: (
-      <ErrorBoundary>
-        <P_report_list />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/report-list',
+        element: (
+          <ErrorBoundary>
+            <P_report_list />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/kb-list',
-    element: (
-      <ErrorBoundary>
-        <P_kb_list />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/kb-list',
+        element: (
+          <ErrorBoundary>
+            <P_kb_list />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/kb-detail',
-    element: (
-      <ErrorBoundary>
-        <P_kb_detail />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/kb-detail',
+        element: (
+          <ErrorBoundary>
+            <P_kb_detail />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/user-manage',
-    element: (
-      <ErrorBoundary>
-        <P_user_manage />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/user-manage',
+        element: (
+          <ErrorBoundary>
+            <P_user_manage />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/sys-settings',
-    element: (
-      <ErrorBoundary>
-        <P_sys_settings />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/sys-settings',
+        element: (
+          <ErrorBoundary>
+            <P_sys_settings />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/profile',
-    element: (
-      <ErrorBoundary>
-        <P_profile />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/profile',
+        element: (
+          <ErrorBoundary>
+            <P_profile />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/sbom-upload',
-    element: (
-      <ErrorBoundary>
-        <P_sbom_upload />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/sbom-upload',
+        element: (
+          <ErrorBoundary>
+            <P_sbom_upload />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/kb-import',
-    element: (
-      <ErrorBoundary>
-        <P_kb_import />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/kb-import',
+        element: (
+          <ErrorBoundary>
+            <P_kb_import />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/kb-edit',
-    element: (
-      <ErrorBoundary>
-        <P_kb_edit />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/kb-edit',
+        element: (
+          <ErrorBoundary>
+            <P_kb_edit />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/kb-category',
-    element: (
-      <ErrorBoundary>
-        <P_kb_category />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/kb-category',
+        element: (
+          <ErrorBoundary>
+            <P_kb_category />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/report-generate',
-    element: (
-      <ErrorBoundary>
-        <P_report_generate />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/report-generate',
+        element: (
+          <ErrorBoundary>
+            <P_report_generate />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/user-edit',
-    element: (
-      <ErrorBoundary>
-        <P_user_edit />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/user-edit',
+        element: (
+          <ErrorBoundary>
+            <P_user_edit />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '/role-manage',
-    element: (
-      <ErrorBoundary>
-        <P_role_manage />
-      </ErrorBoundary>
-    ),
-    errorElement: <ErrorPage />,
-  },
+        path: '/role-manage',
+        element: (
+          <ErrorBoundary>
+            <P_role_manage />
+          </ErrorBoundary>
+        ),
+        errorElement: <ErrorPage />,
+      },
       {
-    path: '*',
-    element: <NotFoundPage />,
+        path: '*',
+        element: <NotFoundPage />,
+      },
+    ],
   },
-    ]
-  }
 ]);
 
 export default router;

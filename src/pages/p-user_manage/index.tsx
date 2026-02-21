@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './styles.module.css';
@@ -15,7 +13,7 @@ interface User {
 
 const UserManagePage: React.FC = () => {
   const navigate = useNavigate();
-  
+
   // 模拟用户数据
   const [mockUsers] = useState<User[]>([
     {
@@ -24,7 +22,7 @@ const UserManagePage: React.FC = () => {
       email: 'zhang@lawfirm.com',
       role: 'admin',
       status: 'active',
-      created_at: '2024-01-01 10:00:00'
+      created_at: '2024-01-01 10:00:00',
     },
     {
       id: 2,
@@ -32,7 +30,7 @@ const UserManagePage: React.FC = () => {
       email: 'li@lawfirm.com',
       role: 'lawyer',
       status: 'active',
-      created_at: '2024-01-02 14:30:00'
+      created_at: '2024-01-02 14:30:00',
     },
     {
       id: 3,
@@ -40,7 +38,7 @@ const UserManagePage: React.FC = () => {
       email: 'wang@lawfirm.com',
       role: 'user',
       status: 'active',
-      created_at: '2024-01-03 09:15:00'
+      created_at: '2024-01-03 09:15:00',
     },
     {
       id: 4,
@@ -48,7 +46,7 @@ const UserManagePage: React.FC = () => {
       email: 'zhao@lawfirm.com',
       role: 'lawyer',
       status: 'inactive',
-      created_at: '2024-01-04 16:45:00'
+      created_at: '2024-01-04 16:45:00',
     },
     {
       id: 5,
@@ -56,7 +54,7 @@ const UserManagePage: React.FC = () => {
       email: 'liu@lawfirm.com',
       role: 'readonly',
       status: 'active',
-      created_at: '2024-01-05 11:20:00'
+      created_at: '2024-01-05 11:20:00',
     },
     {
       id: 6,
@@ -64,7 +62,7 @@ const UserManagePage: React.FC = () => {
       email: 'chen@lawfirm.com',
       role: 'lawyer',
       status: 'active',
-      created_at: '2024-01-06 13:10:00'
+      created_at: '2024-01-06 13:10:00',
     },
     {
       id: 7,
@@ -72,7 +70,7 @@ const UserManagePage: React.FC = () => {
       email: 'yang@lawfirm.com',
       role: 'user',
       status: 'inactive',
-      created_at: '2024-01-07 15:50:00'
+      created_at: '2024-01-07 15:50:00',
     },
     {
       id: 8,
@@ -80,7 +78,7 @@ const UserManagePage: React.FC = () => {
       email: 'huang@lawfirm.com',
       role: 'lawyer',
       status: 'active',
-      created_at: '2024-01-08 10:30:00'
+      created_at: '2024-01-08 10:30:00',
     },
     {
       id: 9,
@@ -88,7 +86,7 @@ const UserManagePage: React.FC = () => {
       email: 'wu@lawfirm.com',
       role: 'readonly',
       status: 'active',
-      created_at: '2024-01-09 14:20:00'
+      created_at: '2024-01-09 14:20:00',
     },
     {
       id: 10,
@@ -96,8 +94,8 @@ const UserManagePage: React.FC = () => {
       email: 'zhou@lawfirm.com',
       role: 'lawyer',
       status: 'active',
-      created_at: '2024-01-10 11:45:00'
-    }
+      created_at: '2024-01-10 11:45:00',
+    },
   ]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -111,31 +109,34 @@ const UserManagePage: React.FC = () => {
 
   // 角色和状态的中文映射
   const roleMap = {
-    'admin': '管理员',
-    'lawyer': '合规律师',
-    'user': '普通用户',
-    'readonly': '只读用户'
+    admin: '管理员',
+    lawyer: '合规律师',
+    user: '普通用户',
+    readonly: '只读用户',
   };
 
   const statusMap = {
-    'active': '启用',
-    'inactive': '禁用'
+    active: '启用',
+    inactive: '禁用',
   };
 
   // 设置页面标题
   useEffect(() => {
     const originalTitle = document.title;
     document.title = '开源合规智能助手 - 用户管理';
-    return () => { document.title = originalTitle; };
+    return () => {
+      document.title = originalTitle;
+    };
   }, []);
 
   // 筛选用户
   useEffect(() => {
-    let filtered = mockUsers.filter(user => {
-      const matchesSearch = !userSearchTerm || 
+    const filtered = mockUsers.filter(user => {
+      const matchesSearch =
+        !userSearchTerm ||
         user.username.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(userSearchTerm.toLowerCase());
-      
+
       const matchesRole = !roleFilter || user.role === roleFilter;
       const matchesStatus = !statusFilter || user.status === statusFilter;
 
@@ -193,12 +194,12 @@ const UserManagePage: React.FC = () => {
   };
 
   // 检查是否全选
-  const isAllSelected = currentPageUsers.length > 0 && 
-    currentPageUsers.every(user => selectedUsers.has(user.id));
+  const isAllSelected =
+    currentPageUsers.length > 0 && currentPageUsers.every(user => selectedUsers.has(user.id));
 
   // 检查是否部分选中
-  const isIndeterminate = selectedUsers.size > 0 && 
-    !currentPageUsers.every(user => selectedUsers.has(user.id));
+  const isIndeterminate =
+    selectedUsers.size > 0 && !currentPageUsers.every(user => selectedUsers.has(user.id));
 
   // 批量更新状态
   const batchUpdateStatus = (status: 'active' | 'inactive') => {
@@ -249,7 +250,7 @@ const UserManagePage: React.FC = () => {
   const generatePageNumbers = () => {
     const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
@@ -265,7 +266,11 @@ const UserManagePage: React.FC = () => {
   // 格式化日期
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+    return (
+      date.toLocaleDateString('zh-CN') +
+      ' ' +
+      date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+    );
   };
 
   return (
@@ -280,19 +285,19 @@ const UserManagePage: React.FC = () => {
             </div>
             <h1 className="text-xl font-semibold text-text-primary">开源合规智能助手</h1>
           </div>
-          
+
           {/* 全局搜索框 */}
           <div className="flex-1 max-w-md mx-8">
             <div className="relative">
-              <input 
-                type="text" 
-                placeholder="搜索知识库、SBOM文件..." 
+              <input
+                type="text"
+                placeholder="搜索知识库、SBOM文件..."
                 className="w-full pl-10 pr-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-sm"></i>
             </div>
           </div>
-          
+
           {/* 右侧操作区 */}
           <div className="flex items-center space-x-4">
             {/* 消息通知 */}
@@ -300,17 +305,17 @@ const UserManagePage: React.FC = () => {
               <i className="fas fa-bell text-lg"></i>
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full"></span>
             </button>
-            
+
             {/* 用户头像 */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => navigate('/profile')}
                 className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50"
               >
-                <img 
-                  src="https://s.coze.cn/image/YJULa6S1upI/" 
-                  alt="用户头像" 
-                  className="w-8 h-8 rounded-full" 
+                <img
+                  src="https://s.coze.cn/image/YJULa6S1upI/"
+                  alt="用户头像"
+                  className="w-8 h-8 rounded-full"
                 />
                 <span className="text-sm text-text-primary">张律师</span>
                 <i className="fas fa-chevron-down text-xs text-text-secondary"></i>
@@ -321,29 +326,49 @@ const UserManagePage: React.FC = () => {
       </header>
 
       {/* 左侧菜单 */}
-      <aside className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light z-40 ${styles.sidebarTransition}`}>
+      <aside
+        className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light z-40 ${styles.sidebarTransition}`}
+      >
         <nav className="p-4 space-y-2">
-          <Link to="/home" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/home"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-home text-lg"></i>
             <span>首页</span>
           </Link>
-          <Link to="/sbom-list" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/sbom-list"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-file-alt text-lg"></i>
             <span>SBOM管理</span>
           </Link>
-          <Link to="/kb-list" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/kb-list"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-book text-lg"></i>
             <span>知识库管理</span>
           </Link>
-          <Link to="/report-list" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/report-list"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-chart-line text-lg"></i>
             <span>报告列表</span>
           </Link>
-          <Link to="/user-manage" className={`${styles.navItem} ${styles.navItemActive} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium`}>
+          <Link
+            to="/user-manage"
+            className={`${styles.navItem} ${styles.navItemActive} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium`}
+          >
             <i className="fas fa-users text-lg"></i>
             <span>用户管理</span>
           </Link>
-          <Link to="/sys-settings" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/sys-settings"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-cog text-lg"></i>
             <span>系统设置</span>
           </Link>
@@ -362,14 +387,14 @@ const UserManagePage: React.FC = () => {
               </nav>
             </div>
             <div className="flex items-center space-x-3">
-              <button 
+              <button
                 onClick={() => console.log('打开角色管理弹窗')}
                 className="px-4 py-2 border border-border-light rounded-lg text-sm font-medium text-text-primary hover:bg-gray-50 transition-colors"
               >
                 <i className="fas fa-shield-alt mr-2"></i>
                 角色管理
               </button>
-              <button 
+              <button
                 onClick={() => console.log('打开新建用户弹窗')}
                 className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
               >
@@ -386,20 +411,20 @@ const UserManagePage: React.FC = () => {
             {/* 搜索框 */}
             <div className="flex items-center space-x-4 flex-1">
               <div className="relative flex-1 max-w-md">
-                <input 
-                  type="text" 
-                  placeholder="搜索用户名或邮箱..." 
+                <input
+                  type="text"
+                  placeholder="搜索用户名或邮箱..."
                   value={userSearchTerm}
-                  onChange={(e) => setUserSearchTerm(e.target.value)}
+                  onChange={e => setUserSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
                 <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-sm"></i>
               </div>
-              
+
               {/* 筛选条件 */}
-              <select 
+              <select
                 value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
+                onChange={e => setRoleFilter(e.target.value)}
                 className="px-3 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">全部角色</option>
@@ -408,10 +433,10 @@ const UserManagePage: React.FC = () => {
                 <option value="user">普通用户</option>
                 <option value="readonly">只读用户</option>
               </select>
-              
-              <select 
+
+              <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
+                onChange={e => setStatusFilter(e.target.value)}
                 className="px-3 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">全部状态</option>
@@ -419,10 +444,10 @@ const UserManagePage: React.FC = () => {
                 <option value="inactive">禁用</option>
               </select>
             </div>
-            
+
             {/* 批量操作 */}
             <div className="flex items-center space-x-2">
-              <button 
+              <button
                 onClick={() => batchUpdateStatus('active')}
                 disabled={selectedUsers.size === 0}
                 className="px-3 py-2 border border-border-light rounded-lg text-sm text-text-primary hover:bg-gray-50 transition-colors disabled:opacity-50"
@@ -430,7 +455,7 @@ const UserManagePage: React.FC = () => {
                 <i className="fas fa-check mr-1"></i>
                 批量启用
               </button>
-              <button 
+              <button
                 onClick={() => batchUpdateStatus('inactive')}
                 disabled={selectedUsers.size === 0}
                 className="px-3 py-2 border border-border-light rounded-lg text-sm text-text-primary hover:bg-gray-50 transition-colors disabled:opacity-50"
@@ -438,7 +463,7 @@ const UserManagePage: React.FC = () => {
                 <i className="fas fa-ban mr-1"></i>
                 批量禁用
               </button>
-              <button 
+              <button
                 onClick={() => batchDelete()}
                 disabled={selectedUsers.size === 0}
                 className="px-3 py-2 border border-danger rounded-lg text-sm text-danger hover:bg-red-50 transition-colors disabled:opacity-50"
@@ -457,45 +482,45 @@ const UserManagePage: React.FC = () => {
               <thead className="bg-gray-50 border-b border-border-light">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={isAllSelected}
-                      ref={(input) => {
+                      ref={input => {
                         if (input) input.indeterminate = isIndeterminate;
                       }}
-                      onChange={(e) => handleSelectAll(e.target.checked)}
+                      onChange={e => handleSelectAll(e.target.checked)}
                       className="rounded border-border-light text-primary focus:ring-primary"
                     />
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => setSortField('username')}
                   >
                     用户名
                     <i className="fas fa-sort ml-1"></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => setSortField('email')}
                   >
                     邮箱
                     <i className="fas fa-sort ml-1"></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => setSortField('role')}
                   >
                     角色
                     <i className="fas fa-sort ml-1"></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => setSortField('status')}
                   >
                     状态
                     <i className="fas fa-sort ml-1"></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => setSortField('created_at')}
                   >
@@ -511,10 +536,10 @@ const UserManagePage: React.FC = () => {
                 {currentPageUsers.map(user => (
                   <tr key={user.id} className={styles.tableRow}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={selectedUsers.has(user.id)}
-                        onChange={(e) => handleToggleUser(user.id, e.target.checked)}
+                        onChange={e => handleToggleUser(user.id, e.target.checked)}
                         className="rounded border-border-light text-primary focus:ring-primary"
                       />
                     </td>
@@ -525,12 +550,16 @@ const UserManagePage: React.FC = () => {
                       {user.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[`roleBadge${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`]}`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[`roleBadge${user.role.charAt(0).toUpperCase() + user.role.slice(1)}`]}`}
+                      >
                         {roleMap[user.role]}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[`statusBadge${user.status}`]}`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[`statusBadge${user.status}`]}`}
+                      >
                         {statusMap[user.status]}
                       </span>
                     </td>
@@ -538,20 +567,20 @@ const UserManagePage: React.FC = () => {
                       {formatDate(user.created_at)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button 
+                      <button
                         onClick={() => console.log('打开用户编辑弹窗，用户ID:', user.id)}
                         className="text-primary hover:text-blue-700"
                       >
                         <i className="fas fa-edit mr-1"></i>编辑
                       </button>
-                      <button 
+                      <button
                         onClick={() => resetPassword(user.id)}
                         className="text-warning hover:text-yellow-700"
                       >
                         <i className="fas fa-key mr-1"></i>重置密码
                       </button>
                       {user.status === 'active' ? (
-                        <button 
+                        <button
                           onClick={() => {
                             if (confirm('确定要禁用该用户吗？')) {
                               updateUserStatus(user.id, 'inactive');
@@ -562,7 +591,7 @@ const UserManagePage: React.FC = () => {
                           <i className="fas fa-ban mr-1"></i>禁用
                         </button>
                       ) : (
-                        <button 
+                        <button
                           onClick={() => {
                             if (confirm('确定要启用该用户吗？')) {
                               updateUserStatus(user.id, 'active');
@@ -579,15 +608,16 @@ const UserManagePage: React.FC = () => {
               </tbody>
             </table>
           </div>
-          
+
           {/* 分页区域 */}
           <div className="px-6 py-4 border-t border-border-light">
             <div className="flex items-center justify-between">
               <div className="text-sm text-text-secondary">
-                显示第 <span>{totalCount > 0 ? startIndex + 1 : 0}</span> - <span>{endIndex}</span> 条，共 <span>{totalCount}</span> 条记录
+                显示第 <span>{totalCount > 0 ? startIndex + 1 : 0}</span> - <span>{endIndex}</span>{' '}
+                条，共 <span>{totalCount}</span> 条记录
               </div>
               <div className="flex items-center space-x-2">
-                <button 
+                <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="px-3 py-1 border border-border-light rounded text-sm text-text-primary hover:bg-gray-50 transition-colors disabled:opacity-50"
@@ -596,12 +626,12 @@ const UserManagePage: React.FC = () => {
                 </button>
                 <div className="flex items-center space-x-1">
                   {generatePageNumbers().map(pageNum => (
-                    <button 
+                    <button
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
                       className={`px-3 py-1 border rounded text-sm transition-colors ${
-                        pageNum === currentPage 
-                          ? 'bg-primary text-white border-primary' 
+                        pageNum === currentPage
+                          ? 'bg-primary text-white border-primary'
                           : 'border-border-light text-text-primary hover:bg-gray-50'
                       }`}
                     >
@@ -609,7 +639,7 @@ const UserManagePage: React.FC = () => {
                     </button>
                   ))}
                 </div>
-                <button 
+                <button
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages || totalPages === 0}
                   className="px-3 py-1 border border-border-light rounded text-sm text-text-primary hover:bg-gray-50 transition-colors disabled:opacity-50"
@@ -626,4 +656,3 @@ const UserManagePage: React.FC = () => {
 };
 
 export default UserManagePage;
-

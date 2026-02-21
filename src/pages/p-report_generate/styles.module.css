@@ -1,5 +1,3 @@
-
-
 .pageWrapper {
   background-color: #f8fafc;
   min-height: 100vh;
@@ -36,8 +34,12 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .formatOption {
@@ -54,4 +56,3 @@
   border-color: #2563eb;
   background-color: #f8fafc;
 }
-

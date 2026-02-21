@@ -1,27 +1,26 @@
-
-
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../lib/auth';
 import styles from './styles.module.css';
 
 interface LoginFormData {
-  username: string;
+  email: string;
   password: string;
   rememberMe: boolean;
 }
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const usernameInputRef = useRef<HTMLInputElement>(null);
-  
+  const { login, isLoggingIn } = useAuth();
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState<LoginFormData>({
-    username: '',
+    email: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
   });
-  
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
@@ -29,13 +28,15 @@ export default function LoginPage() {
   useEffect(() => {
     const originalTitle = document.title;
     document.title = '开源合规智能助手 - 登录';
-    return () => { document.title = originalTitle; };
+    return () => {
+      document.title = originalTitle;
+    };
   }, []);
 
-  // 自动聚焦到用户名输入框
+  // 自动聚焦到邮箱输入框
   useEffect(() => {
-    if (usernameInputRef.current) {
-      usernameInputRef.current.focus();
+    if (emailInputRef.current) {
+      emailInputRef.current.focus();
     }
   }, []);
 
@@ -49,7 +50,7 @@ export default function LoginPage() {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
     // 输入时隐藏错误信息
     if (showErrorMessage) {
@@ -61,7 +62,7 @@ export default function LoginPage() {
   const showError = (message: string) => {
     setErrorMessage(message);
     setShowErrorMessage(true);
-    
+
     // 3秒后自动隐藏错误信息
     setTimeout(() => {
       setShowErrorMessage(false);
@@ -69,43 +70,36 @@ export default function LoginPage() {
   };
 
   // 表单提交处理
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const { username, password } = formData;
-    
+
+    const { email, password } = formData;
+
     // 基本验证
-    if (!username.trim() || !password.trim()) {
+    if (!email.trim() || !password.trim()) {
       showError('请填写完整的登录信息');
       return;
     }
-    
-    // 显示加载状态
-    setIsLoading(true);
-    setShowErrorMessage(false);
-    
-    // 模拟登录请求
-    setTimeout(() => {
-      // 这里应该是实际的登录API调用
-      // 由于是demo项目，我们跳过实际的验证逻辑
-      console.log('登录请求:', { username, password });
-      
-      // 模拟登录成功，跳转到首页
-      navigate('/home');
-    }, 1500);
+
+    try {
+      setShowErrorMessage(false);
+      const response = await login({ email, password });
+    } catch (error) {
+      showError('登录失败，请检查邮箱和密码');
+    }
   };
 
   // 键盘导航支持
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && e.target !== document.querySelector('button')) {
       const activeElement = document.activeElement;
-      if (activeElement === usernameInputRef.current) {
+      if (activeElement === emailInputRef.current) {
         const passwordInput = document.querySelector('#password') as HTMLInputElement;
         if (passwordInput) {
           passwordInput.focus();
         }
       } else if (activeElement === document.querySelector('#password')) {
-        handleSubmit(e as any);
+        handleSubmit(e as React.FormEvent);
       }
     }
   };
@@ -134,26 +128,26 @@ export default function LoginPage() {
         {/* 登录表单 */}
         <div className="bg-white rounded-2xl shadow-login-card p-8">
           <h2 className="text-xl font-semibold text-text-primary mb-6 text-center">欢迎登录</h2>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* 用户名/邮箱输入框 */}
+            {/* 邮箱输入框 */}
             <div className="space-y-2">
-              <label htmlFor="username" className="block text-sm font-medium text-text-primary">
-                用户名/邮箱
+              <label htmlFor="email" className="block text-sm font-medium text-text-primary">
+                邮箱
               </label>
               <div className="relative">
-                <input 
-                  type="text" 
-                  id="username" 
-                  name="username" 
-                  ref={usernameInputRef}
-                  value={formData.username}
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  ref={emailInputRef}
+                  value={formData.email}
                   onChange={handleInputChange}
                   className={`w-full pl-11 pr-4 py-3 border border-border-light rounded-lg ${styles.formInputFocus} transition-all duration-200`}
-                  placeholder="请输入用户名或邮箱"
+                  placeholder="请输入邮箱"
                   required
                 />
-                <i className="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-text-secondary"></i>
+                <i className="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-text-secondary"></i>
               </div>
             </div>
 
@@ -163,10 +157,10 @@ export default function LoginPage() {
                 密码
               </label>
               <div className="relative">
-                <input 
+                <input
                   type={isPasswordVisible ? 'text' : 'password'}
-                  id="password" 
-                  name="password" 
+                  id="password"
+                  name="password"
                   value={formData.password}
                   onChange={handleInputChange}
                   className={`w-full pl-11 pr-11 py-3 border border-border-light rounded-lg ${styles.formInputFocus} transition-all duration-200`}
@@ -174,8 +168,8 @@ export default function LoginPage() {
                   required
                 />
                 <i className="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-text-secondary"></i>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={handleTogglePassword}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-primary transition-colors"
                 >
@@ -187,8 +181,8 @@ export default function LoginPage() {
             {/* 记住密码和忘记密码 */}
             <div className="flex items-center justify-between">
               <label className="flex items-center space-x-2 cursor-pointer">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   name="rememberMe"
                   checked={formData.rememberMe}
                   onChange={handleInputChange}
@@ -196,8 +190,8 @@ export default function LoginPage() {
                 />
                 <span className="text-sm text-text-secondary">记住密码</span>
               </label>
-              <a 
-                href="#" 
+              <a
+                href="#"
                 onClick={handleForgotPassword}
                 className={`text-sm text-primary ${styles.linkHover} transition-colors`}
               >
@@ -206,13 +200,13 @@ export default function LoginPage() {
             </div>
 
             {/* 登录按钮 */}
-            <button 
-              type="submit" 
-              disabled={isLoading}
+            <button
+              type="submit"
+              disabled={isLoggingIn}
               className={`w-full bg-primary text-white py-3 px-4 rounded-lg font-medium ${styles.btnPrimaryHover} ${styles.btnPrimaryActive} transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary focus:ring-opacity-20`}
             >
-              <span>{isLoading ? '登录中...' : '登录'}</span>
-              {isLoading && <i className="fas fa-spinner fa-spin ml-2"></i>}
+              <span>{isLoggingIn ? '登录中...' : '登录'}</span>
+              {isLoggingIn && <i className="fas fa-spinner fa-spin ml-2"></i>}
             </button>
 
             {/* 错误提示 */}
@@ -228,8 +222,8 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-text-secondary text-sm">
               还没有账号？
-              <Link 
-                to="/register" 
+              <Link
+                to="/register"
                 className={`text-primary font-medium ${styles.linkHover} transition-colors ml-1`}
               >
                 立即注册
@@ -246,4 +240,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

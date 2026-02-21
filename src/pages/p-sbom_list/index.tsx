@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './styles.module.css';
@@ -14,10 +12,10 @@ interface SBOMItem {
 }
 
 const statusMap = {
-  'uploaded': { text: '已上传', class: styles.statusUploaded },
-  'parsed': { text: '已解析', class: styles.statusParsed },
-  'reviewing': { text: '评审中', class: styles.statusReviewing },
-  'completed': { text: '已完成', class: styles.statusCompleted }
+  uploaded: { text: '已上传', class: styles.statusUploaded },
+  parsed: { text: '已解析', class: styles.statusParsed },
+  reviewing: { text: '评审中', class: styles.statusReviewing },
+  completed: { text: '已完成', class: styles.statusCompleted },
 };
 
 const mockSBOMData: SBOMItem[] = [
@@ -27,7 +25,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '张律师',
     uploadTime: '2024-01-15 14:30:25',
     status: 'completed',
-    version: '2.1'
+    version: '2.1',
   },
   {
     id: 'sbom-002',
@@ -35,7 +33,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '李律师',
     uploadTime: '2024-01-15 10:15:42',
     status: 'reviewing',
-    version: '1.5'
+    version: '1.5',
   },
   {
     id: 'sbom-003',
@@ -43,7 +41,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '王律师',
     uploadTime: '2024-01-14 16:22:18',
     status: 'parsed',
-    version: '3.0'
+    version: '3.0',
   },
   {
     id: 'sbom-004',
@@ -51,7 +49,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '张律师',
     uploadTime: '2024-01-14 09:45:33',
     status: 'uploaded',
-    version: '4.2'
+    version: '4.2',
   },
   {
     id: 'sbom-005',
@@ -59,7 +57,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '刘律师',
     uploadTime: '2024-01-13 15:12:07',
     status: 'completed',
-    version: '1.0'
+    version: '1.0',
   },
   {
     id: 'sbom-006',
@@ -67,7 +65,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '陈律师',
     uploadTime: '2024-01-13 11:30:55',
     status: 'reviewing',
-    version: '2.5'
+    version: '2.5',
   },
   {
     id: 'sbom-007',
@@ -75,7 +73,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '张律师',
     uploadTime: '2024-01-12 14:20:19',
     status: 'parsed',
-    version: '1.8'
+    version: '1.8',
   },
   {
     id: 'sbom-008',
@@ -83,7 +81,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '李律师',
     uploadTime: '2024-01-12 09:15:32',
     status: 'uploaded',
-    version: '2.3'
+    version: '2.3',
   },
   {
     id: 'sbom-009',
@@ -91,7 +89,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '王律师',
     uploadTime: '2024-01-11 16:45:28',
     status: 'completed',
-    version: '3.2'
+    version: '3.2',
   },
   {
     id: 'sbom-010',
@@ -99,7 +97,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '刘律师',
     uploadTime: '2024-01-11 10:30:15',
     status: 'reviewing',
-    version: '2.0'
+    version: '2.0',
   },
   {
     id: 'sbom-011',
@@ -107,7 +105,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '陈律师',
     uploadTime: '2024-01-10 15:22:44',
     status: 'parsed',
-    version: '4.1'
+    version: '4.1',
   },
   {
     id: 'sbom-012',
@@ -115,7 +113,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '张律师',
     uploadTime: '2024-01-10 09:18:37',
     status: 'uploaded',
-    version: '1.6'
+    version: '1.6',
   },
   {
     id: 'sbom-013',
@@ -123,7 +121,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '李律师',
     uploadTime: '2024-01-09 14:55:22',
     status: 'completed',
-    version: '2.8'
+    version: '2.8',
   },
   {
     id: 'sbom-014',
@@ -131,7 +129,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '王律师',
     uploadTime: '2024-01-09 11:25:14',
     status: 'reviewing',
-    version: '1.3'
+    version: '1.3',
   },
   {
     id: 'sbom-015',
@@ -139,7 +137,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '刘律师',
     uploadTime: '2024-01-08 16:30:48',
     status: 'parsed',
-    version: '3.5'
+    version: '3.5',
   },
   {
     id: 'sbom-016',
@@ -147,7 +145,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '陈律师',
     uploadTime: '2024-01-08 09:45:19',
     status: 'uploaded',
-    version: '1.2'
+    version: '1.2',
   },
   {
     id: 'sbom-017',
@@ -155,7 +153,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '张律师',
     uploadTime: '2024-01-07 15:12:33',
     status: 'completed',
-    version: '2.4'
+    version: '2.4',
   },
   {
     id: 'sbom-018',
@@ -163,7 +161,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '李律师',
     uploadTime: '2024-01-07 10:20:56',
     status: 'reviewing',
-    version: '1.7'
+    version: '1.7',
   },
   {
     id: 'sbom-019',
@@ -171,7 +169,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '王律师',
     uploadTime: '2024-01-06 14:35:27',
     status: 'parsed',
-    version: '2.6'
+    version: '2.6',
   },
   {
     id: 'sbom-020',
@@ -179,7 +177,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '刘律师',
     uploadTime: '2024-01-06 09:50:11',
     status: 'uploaded',
-    version: '1.4'
+    version: '1.4',
   },
   {
     id: 'sbom-021',
@@ -187,7 +185,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '陈律师',
     uploadTime: '2024-01-05 15:45:38',
     status: 'completed',
-    version: '3.1'
+    version: '3.1',
   },
   {
     id: 'sbom-022',
@@ -195,7 +193,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '张律师',
     uploadTime: '2024-01-05 11:15:24',
     status: 'reviewing',
-    version: '2.2'
+    version: '2.2',
   },
   {
     id: 'sbom-023',
@@ -203,7 +201,7 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '李律师',
     uploadTime: '2024-01-04 14:25:49',
     status: 'parsed',
-    version: '1.9'
+    version: '1.9',
   },
   {
     id: 'sbom-024',
@@ -211,14 +209,14 @@ const mockSBOMData: SBOMItem[] = [
     uploader: '王律师',
     uploadTime: '2024-01-04 09:30:12',
     status: 'uploaded',
-    version: '1.1'
-  }
+    version: '1.1',
+  },
 ];
 
 export default function SBOMListPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  
+
   // 状态管理
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -234,7 +232,9 @@ export default function SBOMListPage() {
   useEffect(() => {
     const originalTitle = document.title;
     document.title = '开源合规智能助手 - SBOM管理';
-    return () => { document.title = originalTitle; };
+    return () => {
+      document.title = originalTitle;
+    };
   }, []);
 
   // 初始化页面状态
@@ -247,10 +247,15 @@ export default function SBOMListPage() {
   }, [searchParams]);
 
   // 筛选逻辑
-  const applyFilters = (status: string = statusFilter, time: string = timeFilter, search: string = sbomSearch) => {
-    let filtered = mockSBOMData.filter(item => {
+  const applyFilters = (
+    status: string = statusFilter,
+    time: string = timeFilter,
+    search: string = sbomSearch
+  ) => {
+    const filtered = mockSBOMData.filter(item => {
       // 搜索筛选
-      const matchesSearch = !search || 
+      const matchesSearch =
+        !search ||
         item.name.toLowerCase().includes(search.toLowerCase()) ||
         item.uploader.toLowerCase().includes(search.toLowerCase());
 
@@ -270,8 +275,8 @@ export default function SBOMListPage() {
         let bValue = b[sortField as keyof SBOMItem];
 
         if (sortField === 'uploadTime') {
-          aValue = new Date(a.uploadTime).getTime() as any;
-          bValue = new Date(b.uploadTime).getTime() as any;
+          aValue = new Date(a.uploadTime).getTime() as unknown as typeof aValue;
+          bValue = new Date(b.uploadTime).getTime() as unknown as typeof bValue;
         }
 
         if (sortOrder === 'asc') {
@@ -291,19 +296,22 @@ export default function SBOMListPage() {
     const now = new Date();
 
     switch (filter) {
-      case 'today':
-        return itemDate.toDateString() === now.toDateString();
-      case 'week':
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return itemDate >= weekAgo;
-      case 'month':
-        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        return itemDate >= monthAgo;
-      case 'quarter':
-        const quarterAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-        return itemDate >= quarterAgo;
-      default:
-        return true;
+    case 'today':
+      return itemDate.toDateString() === now.toDateString();
+    case 'week': {
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return itemDate >= weekAgo;
+    }
+    case 'month': {
+      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      return itemDate >= monthAgo;
+    }
+    case 'quarter': {
+      const quarterAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+      return itemDate >= quarterAgo;
+    }
+    default:
+      return true;
     }
   };
 
@@ -347,7 +355,7 @@ export default function SBOMListPage() {
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     const currentPageData = getCurrentPageData();
-    
+
     if (isChecked) {
       const newSelected = new Set(selectedItems);
       currentPageData.forEach(item => newSelected.add(item.id));
@@ -442,7 +450,7 @@ export default function SBOMListPage() {
     const totalPages = Math.ceil(filteredData.length / pageSize);
     const maxVisiblePages = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
@@ -473,19 +481,19 @@ export default function SBOMListPage() {
             </div>
             <h1 className="text-xl font-semibold text-text-primary">开源合规智能助手</h1>
           </div>
-          
+
           {/* 全局搜索框 */}
           <div className="flex-1 max-w-md mx-8">
             <div className="relative">
-              <input 
-                type="text" 
-                placeholder="搜索知识库、SBOM文件..." 
+              <input
+                type="text"
+                placeholder="搜索知识库、SBOM文件..."
                 className="w-full pl-10 pr-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary text-sm"></i>
             </div>
           </div>
-          
+
           {/* 右侧操作区 */}
           <div className="flex items-center space-x-4">
             {/* 消息通知 */}
@@ -493,14 +501,17 @@ export default function SBOMListPage() {
               <i className="fas fa-bell text-lg"></i>
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full"></span>
             </button>
-            
+
             {/* 用户头像 */}
             <div className="relative">
-              <Link to="/profile" className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50">
-                <img 
-                  src="https://s.coze.cn/image/jA92kZbUzMs/" 
-                  alt="用户头像" 
-                  className="w-8 h-8 rounded-full" 
+              <Link
+                to="/profile"
+                className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-50"
+              >
+                <img
+                  src="https://s.coze.cn/image/jA92kZbUzMs/"
+                  alt="用户头像"
+                  className="w-8 h-8 rounded-full"
                 />
                 <span className="text-sm text-text-primary">张律师</span>
                 <i className="fas fa-chevron-down text-xs text-text-secondary"></i>
@@ -511,29 +522,49 @@ export default function SBOMListPage() {
       </header>
 
       {/* 左侧菜单 */}
-      <aside className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light z-40 ${styles.sidebarTransition}`}>
+      <aside
+        className={`fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-border-light z-40 ${styles.sidebarTransition}`}
+      >
         <nav className="p-4 space-y-2">
-          <Link to="/home" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/home"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-home text-lg"></i>
             <span>首页</span>
           </Link>
-          <Link to="/sbom-list" className={`${styles.navItem} ${styles.navItemActive} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium`}>
+          <Link
+            to="/sbom-list"
+            className={`${styles.navItem} ${styles.navItemActive} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium`}
+          >
             <i className="fas fa-file-alt text-lg"></i>
             <span>SBOM管理</span>
           </Link>
-          <Link to="/kb-list" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/kb-list"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-book text-lg"></i>
             <span>知识库管理</span>
           </Link>
-          <Link to="/report-list" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/report-list"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-chart-line text-lg"></i>
             <span>报告列表</span>
           </Link>
-          <Link to="/user-manage" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/user-manage"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-users text-lg"></i>
             <span>用户管理</span>
           </Link>
-          <Link to="/sys-settings" className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}>
+          <Link
+            to="/sys-settings"
+            className={`${styles.navItem} flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary`}
+          >
             <i className="fas fa-cog text-lg"></i>
             <span>系统设置</span>
           </Link>
@@ -551,7 +582,7 @@ export default function SBOMListPage() {
                 <span>SBOM管理</span>
               </nav>
             </div>
-            <button 
+            <button
               onClick={handleUploadSBOM}
               className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -568,9 +599,9 @@ export default function SBOMListPage() {
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               {/* 搜索框 */}
               <div className="relative">
-                <input 
-                  type="text" 
-                  placeholder="搜索文件名、上传人..." 
+                <input
+                  type="text"
+                  placeholder="搜索文件名、上传人..."
                   value={sbomSearch}
                   onChange={handleSearchChange}
                   className="w-full sm:w-64 pl-10 pr-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -579,7 +610,7 @@ export default function SBOMListPage() {
               </div>
 
               {/* 状态筛选 */}
-              <select 
+              <select
                 value={statusFilter}
                 onChange={handleStatusFilterChange}
                 className="px-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -592,7 +623,7 @@ export default function SBOMListPage() {
               </select>
 
               {/* 时间范围筛选 */}
-              <select 
+              <select
                 value={timeFilter}
                 onChange={handleTimeFilterChange}
                 className="px-4 py-2 border border-border-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -607,7 +638,7 @@ export default function SBOMListPage() {
 
             {/* 批量操作 */}
             <div className="flex items-center space-x-3">
-              <button 
+              <button
                 onClick={handleBatchDelete}
                 disabled={selectedItems.size === 0}
                 className="px-4 py-2 border border-danger text-danger rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -615,7 +646,7 @@ export default function SBOMListPage() {
                 <i className="fas fa-trash mr-2"></i>
                 批量删除
               </button>
-              <button 
+              <button
                 onClick={handleBatchReview}
                 disabled={selectedItems.size === 0}
                 className="px-4 py-2 border border-primary text-primary rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -632,10 +663,12 @@ export default function SBOMListPage() {
           {/* 表格头部 */}
           <div className="px-6 py-4 border-b border-border-light">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-text-secondary">共 <span>{totalItems}</span> 个SBOM文件</span>
+              <span className="text-sm text-text-secondary">
+                共 <span>{totalItems}</span> 个SBOM文件
+              </span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-text-secondary">每页显示</span>
-                <select 
+                <select
                   value={pageSize}
                   onChange={handlePageSizeChange}
                   className="px-2 py-1 border border-border-light rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary"
@@ -655,43 +688,51 @@ export default function SBOMListPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={isAllSelected()}
-                      ref={(input) => {
+                      ref={input => {
                         if (input) input.indeterminate = isIndeterminate();
                       }}
                       onChange={handleSelectAll}
                       className="rounded border-border-light focus:ring-primary"
                     />
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => handleSort('name')}
                   >
                     文件名称
-                    <i className={`fas ${sortField === 'name' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}></i>
+                    <i
+                      className={`fas ${sortField === 'name' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}
+                    ></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => handleSort('uploader')}
                   >
                     上传人
-                    <i className={`fas ${sortField === 'uploader' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}></i>
+                    <i
+                      className={`fas ${sortField === 'uploader' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}
+                    ></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => handleSort('uploadTime')}
                   >
                     上传时间
-                    <i className={`fas ${sortField === 'uploadTime' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}></i>
+                    <i
+                      className={`fas ${sortField === 'uploadTime' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}
+                    ></i>
                   </th>
-                  <th 
+                  <th
                     className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider cursor-pointer hover:text-text-primary"
                     onClick={() => handleSort('status')}
                   >
                     状态
-                    <i className={`fas ${sortField === 'status' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}></i>
+                    <i
+                      className={`fas ${sortField === 'status' ? (sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'} ml-1`}
+                    ></i>
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     版本
@@ -702,18 +743,18 @@ export default function SBOMListPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-border-light">
-                {currentPageData.map((item) => (
+                {currentPageData.map(item => (
                   <tr key={item.id} className={styles.tableRow}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={selectedItems.has(item.id)}
-                        onChange={(e) => handleItemSelect(item.id, e.target.checked)}
+                        onChange={e => handleItemSelect(item.id, e.target.checked)}
                         className="rounded border-border-light focus:ring-primary"
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <button 
+                      <button
                         onClick={() => handleViewDetail(item.id)}
                         className="text-primary hover:text-blue-700 font-medium"
                       >
@@ -735,21 +776,21 @@ export default function SBOMListPage() {
                       {item.version}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                      <button 
+                      <button
                         onClick={() => handleViewDetail(item.id)}
                         className="text-primary hover:text-blue-700"
                       >
                         <i className="fas fa-eye mr-1"></i>查看
                       </button>
                       {item.status !== 'completed' && (
-                        <button 
+                        <button
                           onClick={() => handleReview(item.id)}
                           className="text-success hover:text-green-700"
                         >
                           <i className="fas fa-play mr-1"></i>评审
                         </button>
                       )}
-                      <button 
+                      <button
                         onClick={() => handleDelete(item.id)}
                         className="text-danger hover:text-red-700"
                       >
@@ -766,10 +807,11 @@ export default function SBOMListPage() {
           <div className="px-6 py-4 border-t border-border-light">
             <div className="flex items-center justify-between">
               <div className="text-sm text-text-secondary">
-                显示第 <span>{totalItems > 0 ? startIndex : 0}</span> - <span>{endIndex}</span> 条，共 <span>{totalItems}</span> 条
+                显示第 <span>{totalItems > 0 ? startIndex : 0}</span> - <span>{endIndex}</span>{' '}
+                条，共 <span>{totalItems}</span> 条
               </div>
               <div className="flex items-center space-x-2">
-                <button 
+                <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="px-3 py-1 border border-border-light rounded text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -777,13 +819,13 @@ export default function SBOMListPage() {
                   <i className="fas fa-chevron-left"></i>
                 </button>
                 <div className="flex space-x-1">
-                  {generatePageNumbers().map((page) => (
-                    <button 
+                  {generatePageNumbers().map(page => (
+                    <button
                       key={page}
                       onClick={() => handlePageChange(page)}
                       className={`px-3 py-1 border rounded text-sm ${
-                        page === currentPage 
-                          ? 'bg-primary text-white border-primary' 
+                        page === currentPage
+                          ? 'bg-primary text-white border-primary'
                           : 'border-border-light hover:bg-gray-50'
                       }`}
                     >
@@ -791,7 +833,7 @@ export default function SBOMListPage() {
                     </button>
                   ))}
                 </div>
-                <button 
+                <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages || totalPages === 0}
                   className="px-3 py-1 border border-border-light rounded text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -806,4 +848,3 @@ export default function SBOMListPage() {
     </div>
   );
 }
-
